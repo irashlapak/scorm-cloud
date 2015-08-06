@@ -4,9 +4,9 @@ describe "Rustici Web Service API" do
   describe ScormCloud::ScormCloud.new($scorm_cloud_appid,$scorm_cloud_secret).dispatch do
     it { should respond_to(:get_destination_list) }
     it { should respond_to(:get_destination_info) }
-    it { should respond_to(:create_destination) }
-    it { should respond_to(:update_destination) }
-    it { should respond_to(:delete_destination) }
+    it { should respond_to(:create_destination).with(1).arguments }
+    it { should respond_to(:update_destination).with(2).arguments }
+    it { should respond_to(:delete_destination).with(1).arguments }
     it { should respond_to(:get_dispatch_list) }
     it { should respond_to(:get_dispatch_info) }
     it { should respond_to(:create_dispatch) }
