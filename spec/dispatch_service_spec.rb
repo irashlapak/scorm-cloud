@@ -11,7 +11,7 @@ describe "Rustici Web Service API" do
     it { should respond_to(:get_dispatch_info) }
     it { should respond_to(:create_dispatch).with(2).arguments }
     it { should respond_to(:update_dispatches) }
-    it { should respond_to(:download_dispatches) }
+    it { should respond_to(:download_dispatches).with(1).arguments }
     it { should respond_to(:delete_dispatches).with(1).arguments }
   end
 end
