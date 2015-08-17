@@ -1,7 +1,7 @@
 module ScormCloud
   class RegistrationService < BaseService
     not_implemented :get_registration_list_results,
-      :get_launch_history, :get_launch_info, :reset_global_objectives,
+      :get_launch_info, :reset_global_objectives,
       :update_learner_info, :test_registration_post_url
 
     def create_registration(course_id, reg_id, first_name, last_name, learner_id, options = {})
@@ -42,6 +42,11 @@ module ScormCloud
         :redirecturl => redirect_url
       })
       connection.launch_url("rustici.registration.launch", params)
+    end
+
+    def get_launch_history(reg_id)
+      xml = connection.call("rustici.registration.getLaunchHistory", { :regid => reg_id })
+      xml.elements["/rsp/launchhistory"].map { |e| Launch.from_xml(e) }
     end
 
     def reset_registration(reg_id)
