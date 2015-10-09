@@ -1,19 +1,14 @@
 module ScormCloud
   class CourseService < BaseService
-    not_implemented :import_cours_async, :get_async_import_result,
-      :properties, :get_assets, :update_assets,
+    not_implemented :properties, :get_assets, :update_assets,
       :get_file_structure, :delete_files
 
     # TODO: Handle Warnings
     def import_course(course_id, file)
-      if file.respond_to? :read
-        xml = connection.post("rustici.course.importCourse", file, :courseid => course_id)
-      else
-        xml = connection.call("rustici.course.importCourse", :courseid => course_id, :path => file)
-      end
+      xml = import_course_response('importCourse', course_id, file)
 
       if xml.elements['//rsp/importresult'] && xml.elements['//rsp/importresult'].attributes["successful"] == "true"
-        title = xml.elements['//rsp/importresult/title'].text 
+        title = xml.elements['//rsp/importresult/title'].text
         { :title => title, :warnings => [] }
       else
         # Package wasn't a zip file at all
@@ -29,6 +24,33 @@ module ScormCloud
           raise "Not successful. Response: #{xml_text}"
         end
       end
+    end
+
+    def import_course_async(course_id, file)
+      xml = import_course_response('importCourseAsync', course_id, file)
+
+      if xml.elements['/rsp/token/id']
+        token = xml.elements['/rsp/token/id'].text
+        { :token => token }
+      else
+        xml_text = ''
+        xml.write(xml_text)
+        raise "Not successful. Response: #{xml_text}"
+      end
+    end
+
+    def get_async_import_result(token)
+      xml = connection.call("rustici.course.getAsyncImportResult", :token => token)
+
+      response = {}
+      response[:status] = xml.elements['/rsp/status'].text
+      response[:error] = xml.elements['/rsp/error'].text if xml.elements['/rsp/error']
+
+      if xml.elements['/rsp/importresults/importresult'] && xml.elements['/rsp/importresults/importresult'].attributes["successful"] == "true"
+        response[:title] = xml.elements['/rsp/importresults/importresult/title'].text
+      end
+
+      response
     end
 
     def exists(course_id)
@@ -66,6 +88,18 @@ module ScormCloud
     def get_metadata(course_id, scope='course')
       xml = connection.call("rustici.course.getMetadata", courseid: course_id, scope: scope)
       xml.elements['/rsp/package']
+    end
+
+    private
+
+    def import_course_response(import_method, course_id, file)
+      import_service = "rustici.course.#{ import_method }"
+
+      if file.respond_to? :read
+        connection.post(import_service, file, :courseid => course_id)
+      else
+        connection.call(import_service, :courseid => course_id, :path => file)
+      end
     end
   end
 end
