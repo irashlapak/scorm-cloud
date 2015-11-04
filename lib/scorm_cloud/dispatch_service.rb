@@ -31,5 +31,13 @@ module ScormCloud
     def download_dispatches(dispatch_id)
       connection.call_raw("rustici.dispatch.downloadDispatches", { dispatchid: dispatch_id })
     end
+
+    def download_dispatches_by_destination(destinationid)
+      connection.call_raw("rustici.dispatch.downloadDispatches", { destinationid: destinationid })
+    end
+    
+    def download_dispatches_by_course(courseid)
+      connection.call_raw("rustici.dispatch.downloadDispatches", { courseid: courseid })
+    end
   end
 end
