@@ -28,9 +28,9 @@ module ScormCloud
       !xml.elements["/rsp/success"].nil?
     end
 
-    def update_dispatch(dispatch_id,options={})
+    def update_dispatches(dispatch_id,options={})
       opt = options.slice(:enabled,:expiration_date,:registrationcap)
-      params = opt.merge({dispatchid: destination_id})
+      params = opt.merge({dispatchid: dispatch_id})
       xml = connection.call("rustici.dispatch.updateDispatches", params)
       !xml.elements["/rsp/success"].nil?
     end
