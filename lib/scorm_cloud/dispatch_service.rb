@@ -28,6 +28,13 @@ module ScormCloud
       !xml.elements["/rsp/success"].nil?
     end
 
+    def update_dispatch(dispatch_id,options={})
+      opt = options.slice(:enabled,:expiration_date,:registrationcap)
+      params = opt.merge({dispatchid: destination_id})
+      xml = connection.call("rustici.dispatch.updateDispatches", params)
+      !xml.elements["/rsp/success"].nil?
+    end
+
     def download_dispatches(dispatch_id)
       connection.call_raw("rustici.dispatch.downloadDispatches", { dispatchid: dispatch_id })
     end
@@ -35,7 +42,7 @@ module ScormCloud
     def download_dispatches_by_destination(destinationid)
       connection.call_raw("rustici.dispatch.downloadDispatches", { destinationid: destinationid })
     end
-    
+
     def download_dispatches_by_course(courseid)
       connection.call_raw("rustici.dispatch.downloadDispatches", { courseid: courseid })
     end
