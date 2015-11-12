@@ -14,12 +14,12 @@ module ScormCloud
 
     def get_dispatch_list(page=1)
       xml = connection.call("rustici.dispatch.getDispatchList", { page: page })
-      !xml.elements["/rsp/success"].nil?
+      xml.elements["/rsp/dispatches"].map { |e| Dispatch.from_xml(e) }
     end
 
     def get_destination_list(page=1)
       xml = connection.call("rustici.dispatch.getDestinationList", { page: page })
-      !xml.elements["/rsp/success"].nil?
+      xml.elements["/rsp/dispatchDestinations"].map { |e| Destination.from_xml(e) }
     end
 
     def delete_destination(destination_id)
