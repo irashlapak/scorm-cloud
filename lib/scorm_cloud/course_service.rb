@@ -1,6 +1,6 @@
 module ScormCloud
   class CourseService < BaseService
-    not_implemented :properties, :get_assets, :update_assets,
+    not_implemented :properties, :update_assets,
       :get_file_structure, :delete_files
 
     # TODO: Handle Warnings
@@ -37,6 +37,10 @@ module ScormCloud
         xml.write(xml_text)
         raise "Not successful. Response: #{xml_text}"
       end
+    end
+
+    def get_assets(course_id)
+      connection.call_raw("rustici.course.getAssets", { courseid: course_id })
     end
 
     def get_async_import_result(token)
