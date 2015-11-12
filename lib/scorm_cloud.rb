@@ -8,6 +8,8 @@ require 'scorm_cloud/error'
 
 require 'scorm_cloud/base_object'
 require 'scorm_cloud/course'
+require 'scorm_cloud/dispatch'
+require 'scorm_cloud/destination'
 require 'scorm_cloud/launch'
 require 'scorm_cloud/registration'
 
