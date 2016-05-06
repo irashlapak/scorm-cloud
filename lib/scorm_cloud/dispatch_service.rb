@@ -37,12 +37,12 @@ module ScormCloud
       !xml.elements["/rsp/success"].nil?
     end
 
-    def download_dispatches(dispatch_id)
-      connection.call_raw("rustici.dispatch.downloadDispatches", { dispatchid: dispatch_id })
+    def download_dispatches(dispatch_attrs = {})
+      connection.call_raw("rustici.dispatch.downloadDispatches", dispatch_attrs)
     end
 
-    def update_dispatches(dispatch_id, dispatch_attrs = {})
-      xml = connection.call("rustici.dispatch.updateDispatches", dispatch_attrs.merge({ dispatchid: dispatch_id }))
+    def update_dispatches(dispatch_attrs = {})
+      xml = connection.call("rustici.dispatch.updateDispatches", dispatch_attrs)
       !xml.elements["/rsp/success"].nil?
     end
     def download_dispatches_by_destination(destinationid)
