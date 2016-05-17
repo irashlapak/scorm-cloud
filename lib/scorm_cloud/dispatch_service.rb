@@ -1,6 +1,6 @@
 module ScormCloud
   class DispatchService < BaseService
-    not_implemented  :get_destination_info, :get_dispatch_info
+    not_implemented  :get_destination_info
 
     def create_destination(name)
       xml = connection.call("rustici.dispatch.createDestination", { name: name })
@@ -12,9 +12,14 @@ module ScormCloud
       !xml.elements["/rsp/success"].nil?
     end
 
-    def get_dispatch_list(page=1)
-      xml = connection.call("rustici.dispatch.getDispatchList", { page: page })
+    def get_dispatch_list(page=1, dispatch_args = {})
+      xml = connection.call("rustici.dispatch.getDispatchList", dispatch_args.merge(page: page))
       xml.elements["/rsp/dispatches"].map { |e| Dispatch.from_xml(e) }
+    end
+
+    def get_dispatch_info(dispatch_id)
+      xml = connection.call("rustici.dispatch.getDispatchInfo", { dispatchid: dispatch_id })
+      Dispatch.from_xml(xml.elements["/rsp/dispatch"])
     end
 
     def get_destination_list(page=1)
@@ -45,9 +50,11 @@ module ScormCloud
       xml = connection.call("rustici.dispatch.updateDispatches", dispatch_attrs)
       !xml.elements["/rsp/success"].nil?
     end
+
     def download_dispatches_by_destination(destinationid)
       connection.call_raw("rustici.dispatch.downloadDispatches", { destinationid: destinationid })
     end
+
     def download_dispatches_by_course(courseid)
       connection.call_raw("rustici.dispatch.downloadDispatches", { courseid: courseid })
     end
