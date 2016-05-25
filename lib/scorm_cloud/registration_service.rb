@@ -36,6 +36,10 @@ module ScormCloud
       end
     end
 
+    def exists(reg_id)
+      connection.call_raw("rustici.registration.exists", :regid => reg_id).include?("<result>true</result>")
+    end
+
     def launch(reg_id, redirect_url, options = {})
       params = options.merge({ 
         :regid => reg_id,
