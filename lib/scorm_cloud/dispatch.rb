@@ -2,7 +2,7 @@ module ScormCloud
   class Dispatch < ScormCloud::BaseObject
     attr_accessor :id, :destination_id, :app_id, :course_app_id, :course_id, :enabled, :notes, :open,
       :version, :tags, :created_by, :create_date, :update_date, :registrationcap, :registrationcount,
-      :instanced
+      :instanced, :expiration_date
 
     def self.from_xml(element)
       d = Dispatch.new
