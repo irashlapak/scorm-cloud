@@ -63,5 +63,9 @@ module ScormCloud
       xml = connection.call("rustici.registration.updateLearnerInfo", params)
       !xml.elements["/rsp/success"].nil?
     end
+
+    def exists(reg_id)
+      connection.call_raw("rustici.registration.exists", :regid => reg_id).include?("<result>true</result>")
+    end
   end
 end
